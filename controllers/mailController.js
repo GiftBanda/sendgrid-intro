@@ -2,7 +2,7 @@ const sgMail = require('@sendgrid/mail');
 
 //send email
 exports.sendEmail = (req, res) => {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY || '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');
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY );
 
     const msg = {
         to: req.body.email, // Change to your recipient
