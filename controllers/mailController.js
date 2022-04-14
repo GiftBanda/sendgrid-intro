@@ -6,7 +6,7 @@ exports.sendEmail = (req, res) => {
 
     const msg = {
         to: req.body.email, // Change to your recipient
-        from: 'bandagift42@gmail.com', // Change to your verified sender
+        from: 'test@email.com', // Change to your verified sender
         subject: 'Sending with SendGrid is Fun',
         text: 'and easy to do anywhere, even with Node.js',
         html: '<strong>and easy to do anywhere, even with Node.js</strong>',
