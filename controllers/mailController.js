@@ -1,8 +1,10 @@
 const sgMail = require('@sendgrid/mail');
+require('dotenv').config();
+'use-strict'
 
 //send email
 exports.sendEmail = (req, res) => {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY  || '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');
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     const msg = {
         to: req.body.email, // Change to your recipient
@@ -14,43 +16,43 @@ exports.sendEmail = (req, res) => {
       sgMail
         .send(msg)
         .then(() => {
-          console.log('Email sent')
           res.status(200).json({
             message: "Email sent successfully"
           })
         })
         .catch((error) => {
-          console.error(error)
+          res.status(500).json({
+            message: "Error sending email"
+          })
         } 
     )
 }
 
 exports.getInTouch = (req, res) => {
-  const messageBody = `${req.body.fullname} enquiry ${req.body.message} ${req.body.whatsappNumber} ${req.body.email}`;
-  sendMailInsideSys(
-      'bandagift42@gmail.com',
-      'New message from the website',
-      messageBody
-  );
-  if (!sgMail.send(messageBody)) return res.status(500).send('Internal server error please try again');
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  res.status(201).send('Email sent to admin');
+  const msg = {
+    name: req.body.name,
+    to: 'bandagift42@gmail.com',
+    from: 'bandagift42@gmail.com',
+    html: `${req.body.name} is interested in ${req.body.subject} with the message ${req.body.message}. This is the inquires email ${req.body.email}`,
+    text: req.body.email,
+    subject: req.body.subject
+  };
+
+  sgMail
+        .send(msg)
+        .then(() => {
+          res.status(200).json({
+            message: "Email sent successfully"
+          })
+        })
+        .catch((error) => {
+        res.status(500).json({
+          message: "Error sending email"
+        })
+      } 
+  )
+ 
 }
 
-const sendMailInsideSys = (email, subject, body) => {
-
-  const message = {
-      to: email, // Change to your recipient
-      from: 'bandagift42@gmail.com',
-      subject: subject,
-      text: body,
-      // html: '<strong>tsting html format.js</strong>',
-  };
-  if (!sgMail.send(message)) {
-      console.log('failed to send email');
-      // return res.status(500).send('Internal server error please try again');
-  }
-
-  console.log('email sent to ', email);
-  // res.status(201).send('sending email to user');
-};
